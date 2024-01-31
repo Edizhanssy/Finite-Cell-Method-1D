@@ -7,7 +7,7 @@ is described in [2].
 
 References:
 
-[1]- [1] “FCMLAB: A Finite Cell Research Toolbox for MATLAB,” GitLab, https://gitlab.lrz.de/cie_sam_public/fcmlab. 
+[1]- “FCMLAB: A Finite Cell Research Toolbox for MATLAB,” GitLab, https://gitlab.lrz.de/cie_sam_public/fcmlab. 
 
 [2]- Zander, N.; Bog, T; Elhaddad, M.; Espinoza, R.; Hu, H.; Joly, A.F.; Wu, C.; Zerbe, P.; Düster, A.; Kollmannsberger, S.; Parvizian, J.; Ruess, M.; Schillinger, D.; Rank, E. 
 FCMLab: A Finite Cell Research Toolbox for MATLAB 
