@@ -22,4 +22,4 @@ Advances in Engineering Software 74, pp. 49-63, 2014
 DOI: 10.1016/j.advengsoft.2014.04.004 
 https://www.sciencedirect.com/science/article/abs/pii/S0965997814000684
 
-[3]- [1] D. Schillinger and M. Ruess, “The Finite Cell Method: A review in the context of higher-order structural analysis of CAD and image-based geometric models - archives of Computational methods in engineering,” SpringerLink, https://link.springer.com/article/10.1007/s11831-014-9115-y#citeas
+[3]- D. Schillinger and M. Ruess, “The Finite Cell Method: A review in the context of higher-order structural analysis of CAD and image-based geometric models - archives of Computational methods in engineering,” SpringerLink, https://link.springer.com/article/10.1007/s11831-014-9115-y#citeas
