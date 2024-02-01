@@ -12,6 +12,10 @@ FCM-1D's solution:
 
 
 
+Matlab Model's solution:
+![ModelResult](https://github.com/Edizhanssy/Finite-Cell-Method-1D/assets/128889535/187777a7-6998-4625-8de2-f89f9209c3c3)
+
+
 References:
 
 [1]- “FCMLAB: A Finite Cell Research Toolbox for MATLAB,” GitLab, https://gitlab.lrz.de/cie_sam_public/fcmlab. 
