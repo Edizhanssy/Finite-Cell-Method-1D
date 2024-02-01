@@ -6,10 +6,12 @@ please refer to the FCMLAB code which is implemented in TUM as cited in the refe
 
 Reference Figure from [3]:
 
+![ReferenceSolution](https://github.com/Edizhanssy/Finite-Cell-Method-1D/assets/128889535/1e897611-8220-46e7-8e4a-d40dfeac499e)
 
 
 FCM-1D's solution:
 
+![pythonresult](https://github.com/Edizhanssy/Finite-Cell-Method-1D/assets/128889535/1fa1a931-2658-4900-a7a7-8fa2315fee34)
 
 
 Matlab Model's solution:
