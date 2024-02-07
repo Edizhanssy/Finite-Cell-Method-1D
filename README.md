@@ -29,6 +29,8 @@ Matlab Model's solution:
 
 ![ModelResult](https://github.com/Edizhanssy/Finite-Cell-Method-1D/assets/128889535/187777a7-6998-4625-8de2-f89f9209c3c3)
 
+Note: As you can see the even though the behaviour of the solutions are very close to each other the values are higher then the reference solution. I am still working on this issue to solve the problem. However, since it is an linear-static analysis the behaviour that we get from both Matlab and Python codes validates my approach. Possible issue can be the fact that the parameters could have difference between the reference solution and my model which is not the expected thing.
+
 
 # References:
 
