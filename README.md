@@ -1,6 +1,8 @@
 # Finite-Cell-Method-1D
 A basic implementation of Finite Cell Method for 1-D problems
 
+Python IDE: PyCharm
+
 In the following figure, the problem model is illusrated as state in [3], the geometric and material properties are also illustrated in the figure, as you can see it consists of two rod which are having
 fictitious domain between them so the problem is actually for analyzing the behaviour between these two separate integrated rods with fictitious domain. The first discretization, as stated in the figure, is made with
 two elements and after that the spatial-parititoning and adaptive quadrature is made accordingly. The details can be found in the code as comments.
