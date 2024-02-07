@@ -18,17 +18,18 @@ please refer to the FCMLAB code which is implemented in TUM as cited in the refe
 Reference Figure from [3]:
 
 ![ReferenceSolution](https://github.com/Edizhanssy/Finite-Cell-Method-1D/assets/128889535/1e897611-8220-46e7-8e4a-d40dfeac499e)
-
+                      Figure 2: the reference solution of uni-axial rod model [3]
 
 FCM-1D's solution:
 
 ![pythonresult](https://github.com/Edizhanssy/Finite-Cell-Method-1D/assets/128889535/1fa1a931-2658-4900-a7a7-8fa2315fee34)
-
+                      Figure 2: the solution from my python code
 
 Matlab Model's solution:
 
 ![ModelResult](https://github.com/Edizhanssy/Finite-Cell-Method-1D/assets/128889535/187777a7-6998-4625-8de2-f89f9209c3c3)
-
+                      Figure 3: the solution from my the MATLAB model that I created
+                      
 Note: As you can see the even though the behaviour of the solutions are very close to each other the values are higher then the reference solution. I am still working on this issue to solve the problem. However, since it is an linear-static analysis the behaviour that we get from both Matlab and Python codes validates my approach. Possible issue can be the fact that the parameters could have difference between the reference solution and my model which is not the expected thing.
 
 
