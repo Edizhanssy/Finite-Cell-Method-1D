@@ -1,8 +1,19 @@
 # Finite-Cell-Method-1D
 A basic implementation of Finite Cell Method for 1-D problems
 
+In the following figure, the problem model is illusrated as state in [3], the geometric and material properties are also illustrated in the figure, as you can see it consists of two rod which are having
+fictitious domain between them so the problem is actually for analyzing the behaviour between these two separate integrated rods with fictitious domain. The first discretization, as stated in the figure, is made with
+two elements and after that the spatial-parititoning and adaptive quadrature is made followingly. The details can be found in the code as comments.
+
+![model](https://github.com/Edizhanssy/Finite-Cell-Method-1D/assets/128889535/cdcf2746-4f4c-4b28-8512-8302a813a203)
+                      Figure 1: the problem model of uni-axial rod [3]
+
+
 For the more proper and detailed implementation, especially for the application of 2-dimensional and 3-dimensional problems, 
 please refer to the FCMLAB code which is implemented in TUM as cited in the references [2]. You can get access to FCMLab from [1]. Thank you for their wonderful work, as an curious person I try to get the concept of Finite Cell Method (FCM), and with this valuable implementation, I tried to implement my own version for the problem case of Uni-Axial Rod Example from [3]. The implemetation and detail of the structure of the FCMLab is described in [2]. In the following figures, the solution of axial strain values over the whole rod, and from the code that I implemented is illustrated to show the validation of my code. If you have additional questions, please feel free to contact with me.
+
+
+
 
 Reference Figure from [3]:
 
