@@ -11,12 +11,10 @@ two elements and after that the spatial-parititoning and adaptive quadrature is 
 
                       Figure 1: the problem model of uni-axial rod [3]
 
-The q value is taken as -8 which is 10**-8 In addition, I did not consider the sine load to the first physical domain for simplification.
+The q value is taken as -8, which make the penalization factor as 10**-8. In addition, I did not consider the sine load to the first physical domain for simplification.
 
 For the more proper and detailed implementation, especially for the application of 2-dimensional and 3-dimensional problems, 
-please refer to the FCMLAB code which is implemented in TUM as cited in the references [2]. You can get access to FCMLab from [1]. Thank you for their wonderful work, as an curious person I try to get the concept of Finite Cell Method (FCM), and with this valuable implementation, I tried to implement my own version for the problem case of Uni-Axial Rod Example from [3]. The implemetation and detail of the structure of the FCMLab is described in [2]. In the following figures, the solution of axial strain values over the whole rod, and from the code that I implemented is illustrated to show the validation of my code. If you have additional questions, please feel free to contact with me.
-
-
+please refer to the FCMLAB code which is implemented in TUM as cited in the references [2]. You can get access to FCMLab from [1]. As an curious person I try to get the concept of Finite Cell Method (FCM), and with the valuable implementation provided in the references, and I tried to implement my own version for the problem case of Uni-Axial Rod Example from [3]. The implemetation and detail of the structure of the FCMLab is described in [2]. In the following figures, the solution of axial strain values over the whole rod, and from the code that I implemented is illustrated to show the validation of my code. If you have additional questions, please feel free to contact with me.
 
 
 Reference Figure from [3]
