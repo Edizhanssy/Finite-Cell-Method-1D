@@ -1,21 +1,19 @@
 # Finite-Cell-Method-1D
-A basic implementation of Finite Cell Method for 1-D problems
+This repository presents a basic implementation of the Finite Cell Method (FCM) for 1-D problems.
 
-Python IDE: PyCharm
+Development Environment: Python IDE (PyCharm)
 
-In the following figure, the problem model is illusrated as state in [3], the geometric and material properties are also illustrated in the figure, as you can see it consists of two rod which are having
-fictitious domain between them so the problem is actually for analyzing the behaviour between these two separate integrated rods with fictitious domain. The first discretization, as stated in the figure, is made with
-two elements and after that the spatial-parititoning and adaptive quadrature is made accordingly. The details can be found in the code as comments.
+The figure below illustrates the problem model as stated in [3], including geometric and material properties. It features two rods separated by a fictitious domain, thereby analyzing the behavior across these two integrated rods with a fictitious domain in between. Initial discretization is performed using two elements, followed by spatial partitioning and adaptive quadrature as detailed in the figure. For further insights, refer to the code comments.
 
 ![model](https://github.com/Edizhanssy/Finite-Cell-Method-1D/assets/128889535/cdcf2746-4f4c-4b28-8512-8302a813a203)
 
                       Figure 1: the problem model of uni-axial rod [3]
 
-The q value is taken as -8, which make the penalization factor as 10**-8. In addition, I did not consider the sine load to the first physical domain for simplification.
+The penalization factor is set to 10^-8, chosen by assigning the q-value as -8. To simplify, the sine load was not applied to the first physical domain.
 
-For the more proper and detailed implementation, especially for the application of 2-dimensional and 3-dimensional problems, 
-please refer to the FCMLAB code which is implemented in TUM as cited in the references [2]. You can get access to FCMLab from [1]. As an curious person I try to get the concept of Finite Cell Method (FCM), and with the valuable implementation provided in the references, and I tried to implement my own version for the problem case of Uni-Axial Rod Example from [3]. The implemetation and detail of the structure of the FCMLab is described in [2]. In the following figures, the solution of axial strain values over the whole rod, and from the code that I implemented is illustrated to show the validation of my code. If you have additional questions, please feel free to contact with me.
+For a more comprehensive and detailed implementation, particularly for 2D and 3D problems, refer to the FCMLAB code developed at TUM, as cited in the references [1]. As an enthusiastic engineer exploring the Finite Cell Method (FCM), I leveraged the FCMLAB's implementation to conceptualize and develop my version for the Uni-Axial Rod Example from [3]. If you want to look for the structure, the structure of the implementation fo FCMLAB described in [2]. My approach began with understanding the fictitious domain method and advancing to implement my p-version based FEM. Despite encountering instabilities and unvalidated solutions with similar characteristics, thorough analysis of FCMLAB's approach to Degree of Freedom (DOF) partitioning, node and edge initialization, and integration parts (adaptive quadrature) has been insightful. I am committed to refining my solutions and distinguishing my code from FCMLAB.
 
+The figures below depict axial strain values across the entire rod, demonstrating my code's validation. For additional inquiries, please feel free to contact me.
 
 Reference Figure from [3]
 
@@ -35,8 +33,7 @@ MATLAB Model's solution
 
                       Figure 3: the solution from my the MATLAB model that I created
                       
-Note: As you can see the even though the behaviour of the solutions are very close to each other the values are higher then the reference solution. I am still working on this issue to solve the problem. However, since it is an linear-static analysis, the behaviour that we get from both MATLAB and Python codes validates my approach compared to reference solution. Possible issue can be the fact that the model has some differences between them in terms of boundary conditions or properties even though the model in the both MATLAB and python codes are constructed very carefully.
-
+Note: As observed, although the behaviors of the solutions are very closely aligned, the values are higher than those in the reference solution. I am diligently working to address this discrepancy. It's important to note that, as this is a linear-static analysis, the congruence in behavior between the MATLAB and Python implementations and the reference solution validates my approach. The discrepancy in values may be attributed to subtle differences in boundary conditions or material properties between the models, despite meticulous construction in both the MATLAB and Python codes.
 
 # References
 
