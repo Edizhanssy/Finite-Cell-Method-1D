@@ -1,5 +1,5 @@
 # This code is for assigning the Degree of freedom of the nodes and edges. I used the similar principle as in the
-# FCMLAB code, please for more detailed, and more proper implementation refer to the reference [1] in readme.
+# FCMLAB code, please for more detailed implementation refer to the reference [1] in readme.
 class DOFPartitioning:
 
     dof_index = 0
