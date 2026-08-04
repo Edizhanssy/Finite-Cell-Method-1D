@@ -31,6 +31,7 @@ if __name__ == '__main__':
     plt.ylabel('Axial strain')
     plt.title('Axial Strain Distribution along the uni-axial rod')
     plt.grid(True)
+    plt.savefig('../figures/axial_strain.png', dpi=150)
     plt.show()
 
 
