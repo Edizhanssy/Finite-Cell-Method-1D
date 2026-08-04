@@ -4,11 +4,9 @@ from Integration.IntegrationSubdomain.calcDetJacobiandomain import calcDetJacobi
 from Integration.GaussQuadrature.GaussWeights import GaussQuadratureWeights
 from Integration.GaussQuadrature.GaussCoordinates import GaussQuadratureCoordinates
 
-def SubDomainIntegration(subdomain, integrand, element):
-    PolynomialDegree = 15
-    NGP = PolynomialDegree + 1
-    localPoints = GaussQuadratureCoordinates(NGP)
-    localWeights = GaussQuadratureWeights(NGP)
+def SubDomainIntegration(subdomain, integrand, element, cfg):
+    localPoints = GaussQuadratureCoordinates(cfg.n_gauss)
+    localWeights = GaussQuadratureWeights(cfg.n_gauss)
     intresult = None
     for i in range(len(localPoints)):
         point, weight = getIntegrationPoint(localPoints[i], localWeights[i], subdomain, element)
