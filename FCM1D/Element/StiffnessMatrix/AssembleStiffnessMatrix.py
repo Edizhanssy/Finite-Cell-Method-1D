@@ -2,10 +2,10 @@ import numpy as np
 from Element.StiffnessMatrix.ElementalStiffness import calculate_element_stiffness
 
 # the global stiffness matrix is constructed in this code !
-def assemble_global_stiffness_matrix(elements, DOF, LtoG, cfg):
+def assemble_global_stiffness_matrix(elements, DOF, LtoG, cfg, quads):
     K_global = np.zeros((DOF, DOF))
     for i, element in enumerate(elements):
-        Ke = calculate_element_stiffness(element, cfg)
+        Ke = calculate_element_stiffness(element, cfg, quads[i])
         K_global = ElementMatrixIntoGlobalMatrix(Ke, LtoG[i], K_global)
     return K_global
 

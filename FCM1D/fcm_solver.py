@@ -11,7 +11,7 @@ from Integration.DOFPartitioning import DOFPartitioning
 from BoundaryCondition.NodeStrongBoundaryCondition.ApplyBoundaryConditions import ApplyBoundaryConditions
 from BoundaryCondition.PenaltyValueAlgorithm.StrongPenaltyAlgorithm import StrongPenaltyAlgorithm
 from BoundaryCondition.NodeStrongBoundaryCondition.StrongNodeDirichlet import StrongNodeDirichletBoundaryCondition
-
+from Integration.Quadrature import build_element_quadrature
 
 def solve(cfg):
     elements = [Element(0, (cfg.to_local(0.0), cfg.to_local(cfg.L)), (0.0, cfg.L))]
@@ -23,8 +23,9 @@ def solve(cfg):
 
     LtoG = setupPerElement(nodes[0], edges[0], cfg.n_modes, 1, cfg.n_elements)
 
-    K = assemble_global_stiffness_matrix(elements, DOF, LtoG, cfg)
-    F = assemble_Force_Vector(elements, DOF, LtoG, cfg)
+    quads = [build_element_quadrature(e, cfg) for e in elements]
+    K = assemble_global_stiffness_matrix(elements, DOF, LtoG, cfg, quads)
+    F = assemble_Force_Vector(elements, DOF, LtoG, cfg, quads)
     nodal_force_sum = float(F[[0, 1, 2], 0].sum())
 
     penalty = StrongPenaltyAlgorithm(cfg.penalty)
@@ -36,7 +37,7 @@ def solve(cfg):
     u = np.array(np.linalg.solve(K, F)).flatten()
 
     return dict(elements=elements, DOF=DOF, LtoG=LtoG, solution=u,
-                kappa=kappa, nodal_force_sum=nodal_force_sum)
+                kappa=kappa, nodal_force_sum=nodal_force_sum, quads=quads)
 
 
 def strain_field(cfg, elements, LtoG, solution, samples=400):
