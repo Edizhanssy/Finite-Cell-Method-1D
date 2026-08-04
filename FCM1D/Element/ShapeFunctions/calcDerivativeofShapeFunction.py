@@ -46,7 +46,23 @@ def evalDerivOfShapeFunct(PolynomialDegree, xi):
     return np.concatenate([evalNodalModesDeriv(),
                            evalEdgeModesDeriv(PolynomialDegree, xi)])
 
+def evalNodalModes(xi):
+    return np.array([0.5 * (1 - xi), 0.5 * (1 + xi)])
 
+
+def evalEdgeModes(PolynomialDegree, xi):
+    p = int(PolynomialDegree)
+    P, _ = legendre_and_derivs(p, xi)
+    modes = np.zeros(p - 1)
+    for i in range(1, p):
+        n = i + 1
+        modes[i - 1] = (P[n] - P[n - 2]) / np.sqrt(4 * n - 2)
+    return modes
+
+
+def evalShapeFunct(PolynomialDegree, xi):
+    return np.concatenate([evalNodalModes(xi),
+                           evalEdgeModes(PolynomialDegree, xi)])
 
 
 
