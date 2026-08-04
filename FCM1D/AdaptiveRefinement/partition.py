@@ -21,29 +21,17 @@ def checkIntersection(index_geometry, line):
     return check
 
 # Recursively partition the element
-def RecursivePartitioning(line_segment, domain_boundaries, support, depth=0, max_depth=10):
-    sub_domains = []
-    # if intersection exist, element and subdomains are further divided from their middle and identified them as
-    # new subdomains. The procedure is carried out until there will be no called 'cut-cells' avaliable in the domain.
-    # if the max depth is reached the partitioning will be stopped !
+def RecursivePartitioning(line_segment, domain_boundaries, depth=0, max_depth=10):
     if checkIntersection(domain_boundaries, line_segment) and depth < max_depth:
         mid_point = (line_segment[0] + line_segment[1]) / 2
         left_segment = (line_segment[0], mid_point)
         right_segment = (mid_point, line_segment[1])
-        sub_domains += RecursivePartitioning(left_segment, domain_boundaries, support, depth + 1, max_depth)
-        sub_domains += RecursivePartitioning(right_segment, domain_boundaries, support, depth + 1, max_depth)
-    else:
-        sub_domains.append(line_segment)
-    return sub_domains
+        return (RecursivePartitioning(left_segment, domain_boundaries, depth + 1, max_depth)
+                + RecursivePartitioning(right_segment, domain_boundaries, depth + 1, max_depth))
+    return [line_segment]
+
 
 def partition(geometry):
-    subDomains = []
-    # the depth is initially start from 0
-    depthCounter = 0
-    # the domain index of the element is obtained in our case the element has [-1, 1]
-    indexGeometry = [-1, 1]
-    # the recursive partitioning of the corresponding element is carried out and subdomains are obtained !
-    subDomains = RecursivePartitioning(indexGeometry, geometry, subDomains, depthCounter)
-    return subDomains
+    return RecursivePartitioning([-1, 1], geometry, 0)
 
 

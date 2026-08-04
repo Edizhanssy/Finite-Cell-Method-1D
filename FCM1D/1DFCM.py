@@ -53,13 +53,10 @@ NumberOfGaussPoints = PolynomialDegree + 1
 DOF = []
 
 # Partition each element
-for element in elements:
-    flattened_nodes = [node for element_nodes in nodes for node in element_nodes]
-    flattened_edges = [edge for element_edges in edges for edge in element_edges]
-
-    # Assigning DOFs
-    sorting_scheme = DOFPartitioning(flattened_nodes, flattened_edges, PolynomialDegree, 1)
-    DOF = sorting_scheme.assign_all_dofs()
+flattened_nodes = [node for element_nodes in nodes for node in element_nodes]
+flattened_edges = [edge for element_edges in edges for edge in element_edges]
+sorting_scheme = DOFPartitioning(flattened_nodes, flattened_edges, PolynomialDegree, 1)
+DOF = sorting_scheme.assign_all_dofs()
 
 print('the total Degree of Freedom of the whole domain: ', DOF)
 
@@ -87,7 +84,7 @@ print(f'nodal DOF force sum = {ForceVector[[0,1,2],0].sum():.3e}   expected ~0')
 
 print('the boundary conditions are obtained')
 print('the strong penalty algorithm and strong dirichlet boundary conditions will be used')
-print('the weak composition of the boundary conditions can also be in consideration; however, strong from is in considertation for this code !')
+print('the weak composition of the boundary conditions can also be in consideration; however, strong from is in consideration for this code !')
 
 PenaltyAlgorithm = StrongPenaltyAlgorithm(10e4)
 InitialFix = StrongNodeDirichletBoundaryCondition([0, 0 ,0], 0, 1, PenaltyAlgorithm)

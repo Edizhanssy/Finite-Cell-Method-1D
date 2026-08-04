@@ -5,30 +5,15 @@ from Integration.GaussQuadrature.GaussWeights import GaussQuadratureWeights
 from Integration.GaussQuadrature.GaussCoordinates import GaussQuadratureCoordinates
 
 def SubDomainIntegration(subdomain, integrand, element):
-    # the polynomial degree is redefined here, which is not an efficient way since it is defined in the model code,
-    # the structure will be eased in the following upgrades
-    # if you want, you can modify this code to handle this
     PolynomialDegree = 15
-    NGP = PolynomialDegree+1
-    # the gauss points of the corresponding subdomain is obtained !
-    # the gauss points are constructed as like in the FCMLAB code, please refer to readme file for the reference !
+    NGP = PolynomialDegree + 1
     localPoints = GaussQuadratureCoordinates(NGP)
     localWeights = GaussQuadratureWeights(NGP)
-    # the points and weights of the subdomains gauss points, that will be integrated to find the result, will be stored !
-    points = []
-    weights = []
-    # the integration points are first mapped to the element
-    point, weight = getIntegrationPoint(localPoints[0], localWeights[0], subdomain, element)
-    # the integration results is obtained !
-    intresult = integrand(point)*weight
-    points.append(point)
-    weights.append(weight)
-    # the subdomains integrations points are further obtained
-    for i in range(1, len(localPoints)):
+    intresult = None
+    for i in range(len(localPoints)):
         point, weight = getIntegrationPoint(localPoints[i], localWeights[i], subdomain, element)
-        intresult += integrand(point) * weight
-        points.append(point)
-        weights.append(weight)
+        contribution = integrand(point) * weight
+        intresult = contribution if intresult is None else intresult + contribution
     return intresult
 
 def getIntegrationPoint(localPoint, localWeights, subDomain, element):
