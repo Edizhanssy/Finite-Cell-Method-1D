@@ -13,7 +13,7 @@ from BoundaryCondition.NodeStrongBoundaryCondition.StrongNodeDirichlet import St
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Properties !
+# Properties!
 L = 3 # length
 E = 1 # elastic modulus
 density = 1
@@ -37,7 +37,7 @@ print('the boundaries in local coordinates [-1, 1]: ', local_domain_boundaries)
 # Initial line segment in local coordinates
 initial_line_segment = (global_to_local(startnode), global_to_local(endnode))
 
-# the initial elements has been constructed !!
+# The initial elements have been constructed !!
 elements = [Element(0, (global_to_local(0), global_to_local(L)), (0, L))]
 
 nodes, edges, elements = create_nodes_and_edges(elements, number_of_x_divisions)
@@ -45,7 +45,7 @@ nodes, edges, elements = create_nodes_and_edges(elements, number_of_x_divisions)
 Nodes = []
 Edges = []
 
-# For this problem, we are considering higher order shape functions
+# For this problem, we are considering higher-order shape functions
 PolynomialDegree = 15
 NumberOfGaussPoints = PolynomialDegree + 1
 
@@ -98,6 +98,11 @@ solution = np.linalg.solve(StiffnessMatrix, ForceVector)
 solution = np.array(solution).flatten()
 
 
+#mask = (x_coords >= 1.0) & (x_coords <= 7/3)
+#print("mean strain in fictitious domain:", np.trapezoid(strains[mask], x_coords[mask]) / (7/3 - 1.0))
+#print("expected:", -1.0 / (4/3))
+
+
 print('POST-PROCESS')
 print('Calculating Axial Strains')
 
@@ -128,5 +133,7 @@ plt.ylabel('Axial strain')
 plt.title('Axial Strain Distribution along the uni-axial rod')
 plt.grid(True)
 plt.show()
+
+
 
 

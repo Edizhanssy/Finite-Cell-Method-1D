@@ -1,33 +1,50 @@
 import numpy as np
+
+def legendre_and_derivs(n_max, xi):
+    n_max = int(n_max)
+    P = np.zeros(n_max + 1)
+    dP = np.zeros(n_max + 1)
+    P[0], dP[0] = 1.0, 0.0
+    if n_max >= 1:
+        P[1], dP[1] = xi, 1.0
+    for n in range(2, n_max + 1):
+        P[n] = ((2*n - 1) * xi * P[n-1] - (n - 1) * P[n-2]) / n
+        dP[n] = ((2*n - 1) * (P[n-1] + xi * dP[n-1]) - (n - 1) * dP[n-2]) / n
+    return P, dP
+
+
 def legendre_polynomial(n, x):
-    if n == 0:
-        return 1
-    elif n == 1:
-        return x
-    else:
-        return ((2*n - 1)*x*legendre_polynomial(n-1, x) - (n - 1)*legendre_polynomial(n-2, x)) / n
+    P, _ = legendre_and_derivs(n, x)
+    return P[n]
+
+
 def derivative_legendre_polynomial(n, x):
-    if n == 0:
-        return 0
-    elif n == 1:
-        return 1
-    else:
-        return ((2*n - 1) * (legendre_polynomial(n-1, x) + x * derivative_legendre_polynomial(n-1, x)) - n * derivative_legendre_polynomial(n-2, x)) / n
+    _, dP = legendre_and_derivs(n, x)
+    return dP[n]
+
+
 def evalDerivOfN(i, xi):
-    return 1 / np.sqrt(4 * i - 2) * (derivative_legendre_polynomial(i, xi) - derivative_legendre_polynomial(i - 2, xi))
-def evalEdgeModesDeriv(PolynomialDegree, xi):
-    EdgeModesDeriv = np.zeros(PolynomialDegree - 1)
-    for i in range(1, PolynomialDegree):
-        EdgeModesDeriv[i - 1] = evalDerivOfN(i + 1, xi)
-    return EdgeModesDeriv
+    _, dP = legendre_and_derivs(i, xi)
+    return (dP[i] - dP[i - 2]) / np.sqrt(4 * i - 2)
+
+
 def evalNodalModesDeriv():
-    dN1 = -0.5
-    dN2 = 0.5
-    return np.array([dN1, dN2])
+    return np.array([-0.5, 0.5])
+
+
+def evalEdgeModesDeriv(PolynomialDegree, xi):
+    p = int(PolynomialDegree)
+    _, dP = legendre_and_derivs(p, xi)
+    modes = np.zeros(p - 1)
+    for i in range(1, p):
+        n = i + 1                      # n = 2 .. p
+        modes[i - 1] = (dP[n] - dP[n - 2]) / np.sqrt(4 * n - 2)
+    return modes
+
+
 def evalDerivOfShapeFunct(PolynomialDegree, xi):
-    NodalModesDeriv = evalNodalModesDeriv()
-    EdgeModesDeriv = evalEdgeModesDeriv(PolynomialDegree, xi)
-    return np.concatenate([NodalModesDeriv, EdgeModesDeriv])
+    return np.concatenate([evalNodalModesDeriv(),
+                           evalEdgeModesDeriv(PolynomialDegree, xi)])
 
 
 
