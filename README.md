@@ -2,15 +2,13 @@
 
 A from-scratch implementation of the Finite Cell Method (FCM) for the uni-axial embedded-domain
 benchmark of Schillinger, Düster & Rank [3]: two physical rods separated by a fictitious domain,
-discretised with two finite cells, a p-version hierarchic basis, and adaptive sub-domain quadrature.
+discretized with two finite cells, a p-version hierarchic basis, and adaptive sub-domain quadrature.
 
-The solver is verified against a closed-form solution to **10 significant digits**, and the
-penalisation, quadrature-depth and polynomial-degree parameter spaces are characterised
+The solver is verified against a closed-form solution to 10 significant digits, and the
+penalization, quadrature-depth, and polynomial-degree parameter spaces are characterized
 quantitatively rather than assumed.
 
----
-
-## At a glance
+## Basic Pre-Liminary Information
 
 | | |
 |---|---|
@@ -22,9 +20,8 @@ quantitatively rather than assumed.
 | Conditioning | κ(K) ≈ 7.5·10⁴ / α, measured across 13 decades |
 | Runtime | 0.013 s for the full benchmark |
 
----
 
-## Problem
+## Problem Description
 
 ![model](https://github.com/Edizhanssy/Finite-Cell-Method-1D/assets/128889535/cdcf2746-4f4c-4b28-8512-8302a813a203)
 
@@ -38,9 +35,7 @@ quantitatively rather than assumed.
 
 A = 1, ν = 0. A displacement Δu = 1 is imposed at x = 3; the left end is fixed. A distributed
 axial load f<sub>sin</sub> = (1/20)·sin(4πX) acts on the first physical rod only. The default
-penalisation is α = 10⁻⁸ (q = 8), as in [3].
-
----
+penalization is α = 10⁻⁸ (q = 8), as in [3].
 
 ## Closed-form reference
 
@@ -56,9 +51,7 @@ u(1)   = −I = −1/(80π)
 For α → 0 this gives **ε̄<sub>fict</sub> = −0.747015844817** and **u(1) = −3.9788736·10⁻³**.
 Every number below is measured against this reference, not against a plotted curve.
 
----
-
-## Verification
+## Verification Analysis between numerical and analytical results
 
 | Quantity | Computed | Analytic |
 |---|---|---|
@@ -69,9 +62,9 @@ Every number below is measured against this reference, not against a plotted cur
 | ε̄<sub>fict</sub> from displacements | −0.74702 | −0.74702 |
 | ε̄<sub>fict</sub> from the strain field | −0.74693 | −0.74702 |
 
-The last two rows are **independent code paths**: one evaluates the shape functions at two points
+The last two rows are independent code paths: one evaluates the shape functions at two points
 and differences the displacements, the other integrates the recovered strain field numerically.
-Their agreement tests the consistency of K, F, the integration measure and the shape functions
+Their agreement tests the consistency of K, F, the integration measure, and the shape functions
 simultaneously. The residual difference in the strain-field row is trapezoidal integration error
 on a rapidly oscillating integrand (400 samples), not a solver error.
 
@@ -80,23 +73,23 @@ regression. They form the acceptance criteria for the planned C++ port.
 
 ![axial strain](figures/axial_strain.png)
 
-*Figure 2: axial strain. The fictitious domain is shaded; the dashed line is the analytic mean.
-The jump at x = 1.5 is the inter-element boundary — displacement is C⁰, strain is not.*
+*Figure 2: axial strain distribution over the road on quadrature nodes.*
 
-The oscillation inside the fictitious domain is a Gibbs-type artefact of approximating a
+The fictitious domain is shaded; the dashed line is the analytic mean. The jump at x = 1.5 is the inter-element boundary; 
+displacement is C⁰, strain is not.
+
+The oscillation inside the fictitious domain is a Gibbs-type artifact of approximating a
 discontinuous strain field with high-order polynomials. Its amplitude depends on p and on the
-mesh; it is **not** a physical quantity and is not a meaningful basis for comparison between
+mesh; it is not a physical quantity and is not a meaningful basis for comparison between
 implementations. The integral over the fictitious domain is, and that is what is checked above.
 
----
-
-## Parameter studies
+## Sweep of Penalization Analysis
 
 ![alpha sweep](figures/alpha_sweep.png)
 
 *Figure 3: penalisation sweep, 27 values of α over 13 decades.*
 
-### Penalisation α
+### Penalisation α (alpha)
 
 | α | κ(K) | ε̄<sub>fict</sub> | rel. error |
 |---|---|---|---|
@@ -107,51 +100,48 @@ implementations. The integral over the fictitious domain is, and that is what is
 | 10⁻¹⁰ | 7.5·10¹⁴ | −0.74701584 | 4.2·10⁻¹⁰ |
 | 10⁻¹² | 7.5·10¹⁶ | −0.74701584 | 2.2·10⁻¹⁰ |
 
-Condition number scales as 1/α across the entire range. The modelling error scales as 1.25α,
-matching the closed form.
+Condition number scales as 1/α across the entire range. The modeling error scales as 1.25α, matching the closed form.
 
-The expected accuracy/conditioning trade-off curve does **not** appear: the error decreases
+The expected accuracy/conditioning trade-off curve does not appear: the error decreases
 monotonically and flattens at 2.2·10⁻¹⁰ instead of rising again. The ill-conditioning is benign
 here because the small eigenvalues belong to modes supported almost entirely in the fictitious
-domain, and because a direct solver is used. **This result would not carry over to an iterative
-solver**, which is the relevant regime for 3D and for GPU offload.
+domain, and because a direct solver is used. This result would not carry over to an iterative
+solver, which is the relevant regime for 3D and for GPU offload.
 
 ### Quadrature depth
 
-Residual nodal force imbalance (exact value: 0) against bisection depth:
+Residual nodal force imbalance (exact value = 0) against bisection depth:
 
 | depth | 6 | 8 | 10 | 12 | 14 | 16 | 18 |
 |---|---|---|---|---|---|---|---|
 | residual | 4.8·10⁻⁸ | 3.0·10⁻⁹ | 1.9·10⁻¹⁰ | 1.2·10⁻¹¹ | 7.3·10⁻¹³ | 4.6·10⁻¹⁴ | 2.9·10⁻¹⁵ |
 
-A factor of 16 per two levels — clean h² convergence, as expected for high-order quadrature across
+A factor of 16 per two levels; clean h² convergence, as expected for high-order quadrature across
 a kink. The solution itself converges by depth 8; depth 10 is a safety margin. This matters for
-the 3D extension, where the leaf count grows as ~4<sup>d</sup> and each leaf carries
+the 3D extension, where the leaf count grows as 4<sup>d</sup> and each leaf carries
 n<sub>gauss</sub>³ points, making depth 10 infeasible.
 
 ### Polynomial degree
 
-At α = 10⁻¹², relative error against the analytic limit:
+At α = 10⁻¹², relative-error against the analytic limit:
 
 | p | 7 | 11 | 15 |
 |---|---|---|---|
 | rel. error | 3.6·10⁻⁸ | 8.6·10⁻¹⁰ | 2.2·10⁻¹⁰ |
 
-The 2.2·10⁻¹⁰ floor seen in the α sweep is therefore **discretisation error**, not round-off:
+The 2.2·10⁻¹⁰ floor seen in the α sweep is therefore discretization error, not round-off:
 it moves with p and does not move with quadrature depth. p-convergence is algebraic rather than
 exponential because the limiting strain field is discontinuous.
 
 ### Penalty parameter
 
-Varying the Dirichlet penalty from 10³ to 10⁹ changes the result in **none of 12 significant
-digits**. The boundary treatment is not a limiting factor at this problem scale.
+Varying the Dirichlet penalty from 10³ to 10⁹ changes the result in none of 12 significant
+digits. The boundary treatment is not a limiting factor at this problem scale.
 
----
-
-## Corrections made in 2026
+## Recent Updates
 
 Verifying the hierarchic shape functions against `numpy.polynomial.legendre` exposed a defect in
-the Legendre derivative recurrence. Differentiating Bonnet's relation gives
+the Legendre derivative recurrence. Differentiating Bonnet's relation gives:
 
 ```
 n·P'_n = (2n−1)·[P_{n−1} + x·P'_{n−1}] − (n−1)·P'_{n−2}
@@ -161,32 +151,14 @@ but the implementation carried `n·P'_{n−2}` in the last term. P'₀ = 0 masks
 so it first appears at n = 3 (−1.158 instead of −0.825 at ξ = 0.3) and affected 13 of the 14 edge
 modes. `check_legendre.py` guards against regression.
 
-The same rewrite replaced the naive recursive evaluation — exponential in p, ≈42 000 function
-calls per shape-function evaluation — with an upward recurrence, reducing evaluation cost from
-2307 µs to 15.2 µs per call (**152×**).
+The same rewrite replaced the naive recursive evaluation; exponential in p, 42 000 function
+calls per shape-function evaluation; with an upward recurrence, reducing evaluation cost from 2307 µs to 15.2 µs per call (**152×**).
 
-Also corrected: a missing Jacobian in strain post-processing, strain values plotted on a uniform
-grid rather than at their true quadrature abscissae, and a condition number reported before
-constraint application (which measured the rigid-body mode rather than the physics).
+Another aspect corrected is a missing Jacobian in strain post-processing, strain values plotted on a uniform
+grid rather than at their true quadrature abscissa, and a condition number reported before constraint application 
+(which measured the rigid-body mode rather than the physics)
 
----
-
-## Known limitations
-
-- **p ≤ 15.** Gauss points are tabulated to n = 16; higher orders silently returned empty tables
-  and are now rejected in `Config`. Generating abscissae by Newton iteration removes this ceiling
-  and is planned for the C++ port.
-- **κ above ~10¹⁶ is not measurable** with `numpy.linalg.cond`; the last points of Figure 3
-  deviate from the 1/α line for this reason, not a physical one.
-- **Dense direct solve only.** Appropriate at 31 DOF; not representative of 3D.
-- **1D only.**
-- `MatlabModel/` contains an independent FCMLAB-based cross-check. It uses a different
-  discretisation, so its fictitious-domain amplitudes differ; per the note above, that region is
-  not a meaningful comparison metric.
-
----
-
-## Repository layout
+## Layout of the whole Repository
 
 ```
 FCM1D/
@@ -206,12 +178,10 @@ figures/
 ```
 
 All parameters live in `config.py` and are threaded explicitly through the call chain as a frozen
-dataclass — no module-level state — so parameter sweeps construct a new configuration rather than
-mutating a shared one. Quadrature generation is separated from integration: sub-domains, weights,
-global coordinates and material factors are built once per element into flat arrays, which the
+dataclass; no module-level state, so parameter sweeps construct a new configuration rather than
+mutating a shared one. Quadrature generation is separated from integration: subdomains, weights,
+global coordinates, and material factors are built once per element into flat arrays, which the
 assembly loops consume. Both choices are deliberate preparation for the C++/GPU port.
-
----
 
 ## Running
 
@@ -225,16 +195,12 @@ python3 check_legendre.py   # shape-function derivative verification
 python3 sweep_alpha.py      # penalisation study
 ```
 
----
-
 ## Roadmap
 
 A faithful C++ port (CMake) is in progress, held to the same six acceptance criteria, followed by
-extension to 3D — octree partitioning, per-point Jacobians, tensor-product shape functions and
-STL-based inside/outside testing by ray casting — and GPU kernels with before/after performance
+extension to 3D, octree partitioning, per-point Jacobians, tensor-product shape functions and
+STL-based inside/outside testing by ray casting; and GPU kernels with before/after performance
 sweeps.
-
----
 
 ## References
 
