@@ -1,0 +1,3 @@
+impl,dof,reps,best_ms,median_ms,mesh_ms,quad_ms,asm_ms,solve_ms
+python,31,50,25.385583052411675,26.51437500026077,,,,
+cpp,31,50,0.17,,0.0,0.018000000000000002,0.146,0.005

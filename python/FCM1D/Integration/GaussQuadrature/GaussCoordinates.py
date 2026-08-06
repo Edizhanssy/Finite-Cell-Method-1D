@@ -12,3 +12,8 @@ def _rule(n):
 
 def GaussQuadratureCoordinates(GO):
     return _rule(GO)[0]
+
+@lru_cache(maxsize=None)
+def _rule(n):
+    x, w = np.polynomial.legendre.leggauss(int(n))
+    return tuple(x.tolist()), tuple(w.tolist())

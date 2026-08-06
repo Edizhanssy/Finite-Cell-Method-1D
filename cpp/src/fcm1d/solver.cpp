@@ -4,6 +4,7 @@
 #include <cmath>
 #include <stdexcept>
 #include "fcm/core/legendre.hpp"
+#include <chrono>
 
 namespace fcm {
     namespace {
@@ -16,22 +17,37 @@ namespace fcm {
 
     }  // namespace
 
+    namespace {
+        using Clock = std::chrono::steady_clock;
+        double secs(Clock::time_point a, Clock::time_point b) {
+            return std::chrono::duration<double>(b - a).count();
+        }
+    }
+
     SolveResult solve(const Config& cfg) {
         SolveResult r;
+        const auto t0 = Clock::now();
+
         r.mesh = build_mesh(cfg);
+        const auto t1 = Clock::now();
+
         for (const Element1D& el : r.mesh.elements)
             r.quads.push_back(build_element_quadrature(el, cfg));
+        const auto t2 = Clock::now();
 
         r.K = assemble_stiffness(r.mesh, cfg, r.quads);
         r.F = assemble_force(r.mesh, cfg, r.quads);
+        const auto t3 = Clock::now();
 
         for (int i = 0; i <= cfg.n_elements; ++i)
             r.nodal_force_sum += r.F[static_cast<std::size_t>(r.mesh.node_dof[static_cast<std::size_t>(i)] - 1)];
 
-        apply_penalty(r.K, r.F, r.mesh.node_dof.front() - 1, 0.0,            cfg.penalty);
-        apply_penalty(r.K, r.F, r.mesh.node_dof.back()  - 1, cfg.disp_load,  cfg.penalty);
-
+        apply_penalty(r.K, r.F, r.mesh.node_dof.front() - 1, 0.0,           cfg.penalty);
+        apply_penalty(r.K, r.F, r.mesh.node_dof.back()  - 1, cfg.disp_load, cfg.penalty);
         r.u = solve_dense(r.K, r.F);
+        const auto t4 = Clock::now();
+
+        r.t = {secs(t0,t1), secs(t1,t2), secs(t2,t3), secs(t3,t4), secs(t0,t4)};
         return r;
     }
 
