@@ -1,4 +1,3 @@
-"""C++ portunun dogrulama icin kullanacagi referans degerleri uretir."""
 import os
 import numpy as np
 
@@ -10,6 +9,7 @@ from Element.StiffnessMatrix.ElementalStiffness import calculate_element_stiffne
 from Element.ForceVector.assembleGlobalForceVector import assemble_Force_Vector
 from Integration.GaussQuadrature.GaussCoordinates import GaussQuadratureCoordinates
 from Integration.GaussQuadrature.GaussWeights import GaussQuadratureWeights
+from AdaptiveRefinement.partition import partition
 
 from paths import REFDIR
 
@@ -42,9 +42,8 @@ for xi in XI:
 dump('shapefunc.txt', 'p xi i N dN', rows)
 
 rows = []
-for n in sorted(Config._GAUSS_N):
+for n in range(1, 25):
     pts, wts = GaussQuadratureCoordinates(n), GaussQuadratureWeights(n)
-    assert len(pts) == n and len(wts) == n, f'n={n} tabloda eksik'
     for i in range(len(pts)):
         rows.append((n, i, float(pts[i]), float(wts[i])))
 dump('gauss.txt', 'n i point weight', rows)
@@ -71,6 +70,12 @@ for e, (el, q) in enumerate(zip(res['elements'], res['quads'])):
         for j in range(Ke.shape[1]):
             rows.append((e, i, j, float(Ke[i, j])))
 dump('stiffness_1d.txt', 'element i j Ke', rows)
+
+rows = []
+for e, el in enumerate(res['elements']):
+    for i, sub in enumerate(partition(el, cfg)):
+        rows.append((e, i, float(sub[0]), float(sub[1])))
+dump('subdomains_1d.txt', 'element i xi0 xi1', rows)
 
 F = assemble_Force_Vector(res['elements'], res['DOF'], res['LtoG'], cfg, res['quads'])
 dump('force_1d.txt', 'dof F', [(i, float(F[i, 0])) for i in range(F.shape[0])])

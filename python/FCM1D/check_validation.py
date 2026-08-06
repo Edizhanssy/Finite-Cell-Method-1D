@@ -5,6 +5,10 @@ res = subprocess.run([sys.executable, '1DFCM.py'],
                      capture_output=True, text=True, env=env)
 out = res.stdout
 
+cmd = sys.argv[1:] if len(sys.argv) > 1 else [sys.executable, '1DFCM.py']
+res = subprocess.run(cmd, capture_output=True, text=True, env=env)
+
+
 if res.returncode != 0:
     print(f'DRIVER EXIT {res.returncode}\n--- stderr ---\n{res.stderr}')
     sys.exit(2)
