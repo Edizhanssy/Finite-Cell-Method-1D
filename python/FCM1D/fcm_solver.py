@@ -15,7 +15,7 @@ from Integration.Quadrature import build_element_quadrature
 
 def solve(cfg):
     elements = [Element(0, (cfg.to_local(0.0), cfg.to_local(cfg.L)), (0.0, cfg.L))]
-    nodes, edges, elements = create_nodes_and_edges(elements, cfg.n_elements)
+    nodes, edges, elements = create_nodes_and_edges(elements, cfg)
 
     flat_nodes = [n for en in nodes for n in en]
     flat_edges = [e for ee in edges for e in ee]

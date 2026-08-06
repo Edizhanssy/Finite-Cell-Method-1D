@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 
 from config import Config
 from fcm_solver import run
+import os
+from paths import FIGDIR
 
 if __name__ == '__main__':
     cfg = Config()
@@ -31,7 +33,7 @@ if __name__ == '__main__':
     plt.ylabel('Axial strain')
     plt.title('Axial Strain Distribution along the uni-axial rod')
     plt.grid(True)
-    plt.savefig('../figures/axial_strain.png', dpi=150)
+    plt.savefig(os.path.join(FIGDIR, 'axial_strain.png'), dpi=150)
     plt.show()
 
 

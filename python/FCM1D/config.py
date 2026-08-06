@@ -20,6 +20,15 @@ class Config:
     load_amp: float = 1/20
     load_freq: float = 4 * np.pi
 
+    _GAUSS_N = frozenset({1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 16, 21})
+
+    def __post_init__(self):
+        if self.n_gauss not in self._GAUSS_N:
+            valid_p = sorted(n - 1 for n in self._GAUSS_N)
+            raise ValueError(
+                f'Gauss tablosunda n={self.n_gauss} yok (p={self.p}). '
+                f'Kullanilabilir p: {valid_p}')
+
     @property
     def n_gauss(self):
         return self.p + 1

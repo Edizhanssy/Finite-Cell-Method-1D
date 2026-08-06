@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from config import Config
 from fcm_solver import run
 
+import os
+from paths import FIGDIR, RESULTDIR
 
 def analytic_mean_strain(cfg):
     EA = cfg.E * cfg.A
@@ -36,7 +38,7 @@ for a in np.logspace(-1, -14, 27):
     print(f"a={a:8.1e}  k={row['kappa']:10.3e}  mean={num: .8f}  "
           f"exact={exact: .8f}  e_num={row['err_num']:.2e}  e_mod={row['err_model']:.2e}")
 
-with open('sweep_alpha.csv', 'w', newline='') as f:
+with open(os.path.join(RESULTDIR, 'sweep_alpha.csv'), 'w', newline='') as f:
     w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
     w.writeheader()
     w.writerows(rows)
@@ -57,5 +59,5 @@ ax2.set_title('Error trade-off'); ax2.grid(True, which='both', alpha=0.3)
 ax2.legend(); ax2.invert_xaxis()
 
 plt.tight_layout()
-plt.savefig('alpha_sweep.png', dpi=150)
+plt.savefig(os.path.join(FIGDIR, 'alpha_sweep.png'), dpi=150)
 print('saved: alpha_sweep.png')

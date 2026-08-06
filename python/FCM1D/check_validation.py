@@ -5,6 +5,10 @@ res = subprocess.run([sys.executable, '1DFCM.py'],
                      capture_output=True, text=True, env=env)
 out = res.stdout
 
+if res.returncode != 0:
+    print(f'DRIVER EXIT {res.returncode}\n--- stderr ---\n{res.stderr}')
+    sys.exit(2)
+
 def grab(label):
     m = re.search(re.escape(label) + r'\s*=?\s*(-?\d+\.?\d*(?:[eE][-+]?\d+)?)', out)
     if not m:
