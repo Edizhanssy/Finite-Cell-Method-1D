@@ -15,7 +15,6 @@ class Config:
     # (x_start, x_end, material_id) - 0: physical, 1: fictitious
     domains: tuple = ((0.0, 1.0, 0), (1.0, 7/3, 1), (7/3, 3.0, 0))
 
-    # govde yuku: amp * sin(freq * x)
     load_span: tuple = (0.0, 1.0)
     load_amp: float = 1/20
     load_freq: float = 4 * np.pi

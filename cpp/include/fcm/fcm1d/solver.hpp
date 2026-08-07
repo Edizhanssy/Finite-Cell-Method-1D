@@ -19,7 +19,7 @@ struct SolveResult {
     std::vector<double>            F;
     std::vector<double>            u;
     double                         nodal_force_sum = 0.0;
-    Timings                        t;               // ← eksik olan
+    Timings                        t;
 };
 
 SolveResult solve(const Config& cfg);
@@ -35,4 +35,4 @@ struct StrainField {
 StrainField strain_field(const Config& cfg, const Mesh& m,
                          const std::vector<double>& u, int samples = 400);
 
-}  // namespace fcm
+}

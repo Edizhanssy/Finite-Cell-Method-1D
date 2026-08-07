@@ -32,7 +32,6 @@ int main(int argc, char** argv) {
             std::printf("FAIL u[%2d]  %.17g vs %.17g   dev %.3e\n", d, got, ref, dev);
     }
 
-    // Tablodan bagimsiz: artik ||Ku - F||_inf / ||F||_inf
     double res_inf = 0.0, f_inf = 0.0;
     for (int i = 0; i < r.K.n; ++i) {
         double s = 0.0;
@@ -44,10 +43,10 @@ int main(int argc, char** argv) {
     if (res_inf / f_inf > 1e-12 && ++failed <= 5)
         std::printf("FAIL artik %.3e\n", res_inf / f_inf);
 
-    std::printf("max bagil sapma (Python'a karsi): %.3e   "
-                "(kappa*eps siniri ~1.7e-03)\n", max_dev);
-    std::printf("bagil artik ||Ku-F||/||F||:       %.3e\n", res_inf / f_inf);
-    std::printf("nodal kuvvet toplami:             %.6e\n", r.nodal_force_sum);
+    std::printf("max realative difference: %.3e   "
+                "(kappa*eps limit ~1.7e-03)\n", max_dev);
+    std::printf("relative fraction ||Ku-F||/||F||:       %.3e\n", res_inf / f_inf);
+    std::printf("total nodal force:             %.6e\n", r.nodal_force_sum);
     std::printf("%s  solve: %d checks, %d failures\n",
                 failed ? "FAILED" : "PASSED", checked, failed);
     return failed ? 1 : 0;

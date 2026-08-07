@@ -66,7 +66,7 @@ namespace fcm {
                 return s;
             }
         }
-        throw std::runtime_error("displacement_at: nokta hicbir elemanda degil");
+        throw std::runtime_error("displacement_at: point is not in any element");
     }
 
     StrainField strain_field(const Config& cfg, const Mesh& m,
@@ -91,4 +91,4 @@ namespace fcm {
     }
 
 
-}  // namespace fcm
+}

@@ -14,7 +14,7 @@ namespace fcm {
     struct DomainSpan {
         double x0;
         double x1;
-        int material;          // 0 = fiziksel, 1 = fiktif
+        int material;          // 0 = physical, 1 = fictitious
     };
 
     struct Config {

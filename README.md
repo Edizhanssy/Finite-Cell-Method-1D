@@ -2,31 +2,27 @@
 
 A from-scratch implementation of the Finite Cell Method (FCM) for the uni-axial embedded-domain
 benchmark of Schillinger, Düster & Rank [3]: two physical rods separated by a fictitious domain,
-discretised with two finite cells, a p-version hierarchic basis, and adaptive sub-domain
-quadrature.
+discretized with two finite cells, a p-version hierarchic basis, and adaptive sub-domain quadrature.
 
-The repository contains a **Python reference implementation** and a **faithful C++ port**, both
-verified against a closed-form solution and against each other. The penalisation, quadrature-depth
-and polynomial-degree parameter spaces are characterised quantitatively rather than assumed.
+The repository contains a Python reference implementation and a C++ port, both
+verified against a closed-form solution and against each other. The penalization, quadrature-depth,
+and polynomial-degree parameter spaces are characterized quantitatively rather than assumed.
 
----
+## Summary of the problem parameters and results
 
-## At a glance
-
-| | |
-|---|---|
-| Discretisation | 2 finite cells, p-version hierarchic (integrated Legendre), p = 15 → **31 DOF** |
-| Quadrature | recursive bisection to `max_depth = 10` → 11 sub-domains, 176 points per cell |
-| Boundary conditions | strong Dirichlet via penalty |
-| Solvers | Python: `numpy.linalg.solve`; C++: own partial-pivot LU |
+| |                                                                                            |
+|---|--------------------------------------------------------------------------------------------|
+| Discretisation | 2 finite cells, p-version hierarchic (integrated Legendre), p = 15 → **31 DOF**            |
+| Quadrature | recursive bisection to `max_depth = 10` → 11 sub-domains, 176 points per cell              |
+| Boundary conditions | strong Dirichlet via penalty                                                               |
+| Solvers | Python: `numpy.linalg.solve`; C++: own partial-pivot LU                                    |
 | Verification | ε̄<sub>fict</sub> relative error **1.8·10⁻⁸** at reference settings, **8.2·10⁻¹¹** at best |
-| Conditioning | κ(K) ≈ 7.5·10⁴ / α, measured across 13 decades |
-| Tests | 8 CTest targets — every layer checked against reference data |
-| C++ runtime | **0.170 ms** (min of 50), of which 86 % is assembly |
+| Conditioning | κ(K) ≈ 7.5·10⁴ / α, measured across 13 decades                                             |
+| Tests | 8 CTest targets; every layer checked against reference data                                |
+| C++ runtime | **0.170 ms** (min of 50), of which 86 % is assembly                                        |
 
----
 
-## Problem
+## Problem Description
 
 ![model](https://github.com/Edizhanssy/Finite-Cell-Method-1D/assets/128889535/cdcf2746-4f4c-4b28-8512-8302a813a203)
 
@@ -39,10 +35,8 @@ and polynomial-degree parameter spaces are characterised quantitatively rather t
 | Ω<sub>phys,2</sub> | x ∈ [7/3, 3] | E = 1 |
 
 A = 1, ν = 0. A displacement Δu = 1 is imposed at x = 3; the left end is fixed. A distributed
-axial load f<sub>sin</sub> = (1/20)·sin(4πX) acts on the first physical rod only. The default
-penalisation is α = 10⁻⁸ (q = 8), as in [3].
+axial load f<sub>sin</sub> = (1/20)·sin(4πX) acts on the first physical rod only. The default penalization is α = 10⁻⁸ (q = 8), as in [3].
 
----
 
 ## Closed-form reference
 
@@ -58,9 +52,8 @@ u(1)    = −I = −1/(80π)
 For α → 0 this gives **ε̄<sub>fict</sub> = −0.747015844817** and **u(1) = −3.9788736·10⁻³**.
 Every number below is measured against this closed form, not against a plotted curve.
 
----
 
-## Verification
+## Verification of the Problem
 
 | Quantity | Computed | Analytic |
 |---|---|---|
@@ -71,15 +64,14 @@ Every number below is measured against this closed form, not against a plotted c
 | ε̄<sub>fict</sub> from displacements | −0.74702 | −0.74702 |
 | ε̄<sub>fict</sub> from the strain field | −0.74693 | −0.74702 |
 
-The last two rows are **independent code paths**: one evaluates the shape functions at two points
+The last two rows are independent code paths: one evaluates the shape functions at two points
 and differences the displacements, the other integrates the recovered strain field numerically.
-Their agreement tests the consistency of K, F, the integration measure and the shape functions
+Their agreement tests the consistency of K, F, the integration measure, and the shape functions
 simultaneously. The residual difference in the strain-field row is trapezoidal integration error
 on a rapidly oscillating integrand (400 samples), not a solver error.
 
 These six checks are automated in `check_validation.py`, which returns a non-zero exit code on
-regression. The same harness validates **both** implementations — it takes the driver command as
-an argument:
+regression. The same harness validates both implementations, it takes the driver command as an argument:
 
 ```bash
 python3 check_validation.py                          # Python driver
@@ -90,20 +82,20 @@ Both produce identical values to the printed precision.
 
 ![axial strain](figures/axial_strain.png)
 
-*Figure 2: axial strain along the rod. The fictitious domain is shaded; the dashed line is the
-analytic mean. The jump at x = 1.5 is the inter-element boundary — displacement is C⁰, strain is
-not.*
+*Figure 2: axial strain along the rod.*
 
-The oscillation inside the fictitious domain is a Gibbs-type artefact of approximating a
+The fictitious domain is shaded; the dashed line is the analytic mean. 
+The jump at x = 1.5 is the inter-element boundary displacement is C⁰, strain is not.
+
+The oscillation inside the fictitious domain is a Gibbs-type artifact of approximating a
 discontinuous strain field with high-order polynomials. Its amplitude depends on p and on the
-mesh; it is **not** a physical quantity and is not a meaningful basis for comparison between
+mesh; it is not a physical quantity and is not a meaningful basis for comparison between
 implementations. The integral over the fictitious domain is, and that is what is checked above.
 
----
 
-## Parameter studies
+## Parameter Analysis
 
-### Penalisation α
+### Penalisation α (alpha)
 
 ![alpha sweep](figures/alpha_sweep.png)
 
@@ -118,35 +110,32 @@ implementations. The integral over the fictitious domain is, and that is what is
 | 10⁻¹⁰ | 7.5·10¹⁴ | −0.74701584 | 4.2·10⁻¹⁰ |
 | 10⁻¹² | 7.5·10¹⁶ | −0.74701584 | 2.2·10⁻¹⁰ |
 
-Condition number scales as 1/α across the entire range; the modelling error scales as 1.25α,
-matching the closed form.
+Condition number scales as 1/α across the entire range; the modeling error scales as 1.25α, matching the closed form.
 
-The expected accuracy/conditioning trade-off curve does **not** appear: the error decreases
-monotonically and flattens instead of rising again. The ill-conditioning is benign here because
+The expected accuracy/conditioning trade-off curve does not appear: the error decreases
+monotonically and flattens instead of rising again. The ill-conditioning is being here because
 the small eigenvalues belong to modes supported almost entirely in the fictitious domain, and
-because a direct solver is used. **This result would not carry over to an iterative solver**,
-which is the relevant regime for 3D and for GPU offload.
+because a direct solver is used. This result would not carry over to an iterative solver, which is the relevant regime for 3D and for GPU offload.
 
-Above κ ≈ 10¹⁶ the condition number itself is no longer measurable: `numpy.linalg.cond` is
-SVD-based and its output there varies between runs on identical input. The last points of
-Figure 3 should be read as "unbounded", not as data.
+Above κ = 10¹⁶ the condition number itself is no longer measurable: `numpy.linalg.cond` is
+SVD-based and its output there varies between runs on identical input. The last points of Figure 3 should be read as "unbounded"; not as data.
 
-### Quadrature depth and polynomial degree
+### Quadrature depth and Polynomial degree
 
 ![convergence](figures/convergence.png)
 
 *Figure 4: p-refinement (left) and quadrature refinement (right), with reference slopes.*
 
-Residual nodal force imbalance (exact value: 0) against bisection depth:
+Residual nodal force imbalance (exact value = 0) against bisection depth:
 
 | depth | 4 | 6 | 8 | 10 | 12 | 14 | 16 | 18 |
 |---|---|---|---|---|---|---|---|---|
 | residual | 7.7·10⁻⁷ | 4.8·10⁻⁸ | 3.0·10⁻⁹ | 1.9·10⁻¹⁰ | 1.2·10⁻¹¹ | 7.3·10⁻¹³ | 4.6·10⁻¹⁴ | 2.9·10⁻¹⁵ |
 
-A factor of 16 per two levels — clean h² convergence, as expected for high-order quadrature across
+A factor of 16 per two levels, clean h² convergence, as expected for high-order quadrature across
 a kink. The number of leaves obeys `n_leaves = max_depth + 1` for a single interior discontinuity.
 The solution converges by depth 8; depth 10 is a safety margin. This matters for the 3D extension,
-where the leaf count grows as ~4<sup>d</sup> and each leaf carries n<sub>gauss</sub>³ points.
+where the leaf count grows as 4<sup>d</sup> and each leaf carries n<sub>gauss</sub>³ points.
 
 Relative error against the analytic limit at α = 10⁻¹² (full sweep in `results/sweep_p.csv`):
 
@@ -155,23 +144,19 @@ Relative error against the analytic limit at α = 10⁻¹² (full sweep in `resu
 | DOF | 7 | 9 | 11 | 13 | 17 | 23 | 31 | 41 | 49 |
 | rel. error | 8.1·10⁻³ | 3.6·10⁻⁴ | 1.2·10⁻⁵ | 1.5·10⁻⁷ | 1.5·10⁻⁷ | 8.6·10⁻¹⁰ | 2.2·10⁻¹⁰ | 1.8·10⁻¹⁰ | 8.2·10⁻¹¹ |
 
-Two regimes are visible. Up to p ≈ 6 each step gains a factor of 20–80: the smooth part of the
-solution is being resolved. Beyond that the error follows an **algebraic p⁻³ envelope** with
-superimposed oscillation in the transition region (odd degrees are favoured for p = 6…11; the
-pattern dissolves above p ≈ 12).
+Two regimes are visible. Up to p = 6 each step gains a factor of 20 to 80: the smooth part of the
+solution is being resolved. Beyond that the error follows an algebraic p⁻³ envelope with
+superimposed oscillation in the transition region (odd degrees are favored for p = 6…11; the pattern dissolves above p = 12).
 
-This is the numerical signature of a C⁰ singularity located **inside** an element. For a smooth
+This is the numerical signature of a C⁰ singularity located inside an element. For a smooth
 solution, p-refinement converges exponentially; here the strain field is discontinuous at the
 embedded boundary and the rate collapses to algebraic. Recovering fast convergence requires mesh
-grading towards the discontinuity rather than higher p — which is precisely why reference [3] is
-about *hp-d-adaptive* FCM.
+grading towards the discontinuity rather than higher p; which is precisely why reference [3] is about *hp-d-adaptive* FCM.
 
 ### Penalty parameter
 
-Varying the Dirichlet penalty from 10³ to 10⁹ changes the result in **none of 12 significant
-digits**. The boundary treatment is not a limiting factor at this problem scale.
-
----
+Varying the Dirichlet penalty from 10³ to 10⁹ changes the result in none of 12 significant digits. 
+The boundary treatment is not a limiting factor at this problem scale.
 
 ## C++ port
 
@@ -193,14 +178,11 @@ layer by layer against reference data dumped from the validated Python implement
 
 Two of these do not depend on the reference data at all: Gauss quadrature is checked by
 integrating monomials up to degree 2n−1 exactly, and element stiffness is checked for symmetry
-and for the rigid-body property Kₑ·[1, 1, 0, …]ᵀ = 0. Both would catch an error even if the
-reference files were wrong.
+and for the rigid-body property Kₑ·[1, 1, 0, …]ᵀ = 0. Both would catch an error even if the reference files were wrong.
 
-**Where the two implementations agree and where they don't.** Assembled K and F match to
-6.1·10⁻¹⁶ relative. The solution vector differs by 3.2·10⁻⁹ — five orders of magnitude below the
-κ·ε bound of 1.7·10⁻³, and explained by the different operation order of a plain LU versus
-LAPACK's blocked one. The residual ‖Ku−F‖/‖F‖ is 8.0·10⁻²² in the C++ solve, confirming the
-difference is conditioning, not error.
+Assembled K and F match to 6.1·10⁻¹⁶ relative. The solution vector differs by 3.2·10⁻⁹, 
+five orders of magnitude below the κ·ε bound of 1.7·10⁻³, and explained by the different operation order of a plain LU versus
+LAPACK's blocked one. The residual ‖Ku−F‖/‖F‖ is 8.0·10⁻²² in the C++ solve, confirming the difference is conditioning, not error.
 
 ### Timing
 
@@ -215,18 +197,16 @@ Phase breakdown of the C++ solver, minimum of 50 runs:
 | **total** | **170 µs** | |
 
 Assembly dominates; the 31×31 dense LU is 3 % of runtime, confirming that a dense direct solver
-is the right choice at this scale. The next optimisation target is therefore the assembly loop —
-specifically the three heap allocations per shape-function evaluation, 1056 in total — and not
-the solver.
+is the right choice at this scale. The next optimization target is therefore the assembly loop, 
+specifically the three heap allocations per shape-function evaluation, 1056 in total, and not the solver.
 
 > *Python/C++ speed-up figure pending: the Python reference timing is under investigation for a
 > regression and will be quoted once resolved.*
 
----
 
 ## Defects found and fixed
 
-**Legendre derivative recurrence.** Differentiating Bonnet's relation gives
+Differentiating Bonnet's relation gives:
 
 ```
 n·P'_n = (2n−1)·[P_{n−1} + x·P'_{n−1}] − (n−1)·P'_{n−2}
@@ -234,44 +214,26 @@ n·P'_n = (2n−1)·[P_{n−1} + x·P'_{n−1}] − (n−1)·P'_{n−2}
 
 but the implementation carried `n·P'_{n−2}` in the last term. P'₀ = 0 masks the error at n = 2, so
 it first appears at n = 3 (−1.158 instead of −0.825 at ξ = 0.3) and affected 13 of the 14 edge
-modes. Found by comparing against `numpy.polynomial.legendre`; `check_legendre.py` guards against
-regression.
+modes. Found by comparing against `numpy.polynomial.legendre`; `check_legendre.py` guards against regression.
 
-**Exponential shape-function evaluation.** The same routine used naive recursion without
-memoisation, costing on the order of 10⁴ function calls per evaluation. Rewritten as an upward
-recurrence, reducing evaluation cost from 2307 µs to 15.2 µs per call — a factor of **152**.
+The same routine used naive recursion without memoization, 
+costing on the order of 10⁴ function calls per evaluation. Rewritten as an upward
+recurrence, reducing evaluation cost from 2307 µs to 15.2 µs per call, a factor of **152**.
 
-**Gauss weight transcription error.** The hardcoded 11-point rule had the outermost weight pair as
-0.0556685661167360 instead of 0.0556685671161737. This was found by the **C++ port**, whose
+Gauss weight transcription error: the hardcoded 11-point rule had the outermost weight pair as
+0.0556685661167360 instead of 0.0556685671161737. This was found by the C++ port, whose
 Newton-based generator disagreed with the table; the port's independent 2n−1 exactness test
-confirmed which side was right. The tables have since been replaced by generated values, which
-also removed the p ≤ 15 ceiling they imposed.
+confirmed which side was right. The tables have since been replaced by generated values, which also removed the p ≤ 15 ceiling they imposed.
 
-**Post-processing.** A missing Jacobian in the strain recovery, strain values plotted on a uniform
-grid rather than at their true abscissae, and a condition number computed before constraints were
-applied — measuring the rigid-body mode rather than the physics.
+A missing Jacobian in the strain recovery, strain values plotted on a uniform grid rather than at their true abscissa, 
+and a condition number computed before constraints were applied, measuring the rigid-body mode rather than the physics.
 
----
-
-## Known limitations
-
-- **κ above ~10¹⁶ is not measurable** with `numpy.linalg.cond`; the last points of Figure 3
-  deviate from the 1/α line for this reason, not a physical one.
-- **Dense direct solve only.** Appropriate at 31 DOF; not representative of 3D.
-- **Quadrature residual at the load kink.** The nodal force imbalance is −1.87·10⁻¹⁰ at depth 10;
-  it converges as h² and does not limit the reported quantities.
-- **1D only.**
-- `MatlabRef/` contains an independent FCMLAB-based cross-check. It uses a different
-  discretisation, so its fictitious-domain amplitudes differ; per the note above, that region is
-  not a meaningful comparison metric.
-
----
 
 ## Repository layout
 
 ```
 python/FCM1D/
-  config.py               Config dataclass — model, discretisation and load parameters
+  config.py               Config dataclass: model, discretisation and load parameters
   fcm_solver.py           library: solve / run / strain_field / displacement_at
   1DFCM.py                driver: benchmark, printed results, figure
   paths.py                repository-relative output directories
@@ -288,7 +250,7 @@ cpp/
   include/fcm/core/       legendre, gauss, linalg          (dimension-independent)
   include/fcm/fcm1d/      config, mesh, partition, quadrature, assembly, solver
   src/                    implementations, mirroring include/
-  apps/fcm1d.cpp          driver — prints the same six values as the Python driver
+  apps/fcm1d.cpp          driver: prints the same six values as the Python driver
   tests/                  seven layer tests, no external test framework
 
 reference/                golden files consumed by the C++ tests
@@ -297,17 +259,15 @@ figures/                  README figures
 MatlabRef/                independent MATLAB cross-check
 ```
 
-All parameters live in `Config` and are threaded explicitly through the call chain — no
+All parameters live in `Config` and are threaded explicitly through the call chain, no
 module-level state, so parameter sweeps construct a new configuration rather than mutating a
 shared one. Quadrature generation is separated from integration: sub-domains, weights, global
-coordinates and material factors are built once per element into flat arrays which the assembly
+coordinates, and material factors are built once per element into flat arrays which the assembly
 loops consume. Both choices are deliberate preparation for the 3D and GPU work.
-
----
 
 ## Running
 
-**Python** — requires `numpy` and `matplotlib`:
+Python requires `numpy` and `matplotlib`:
 
 ```bash
 cd python/FCM1D
@@ -319,7 +279,7 @@ python3 dump_reference.py    # regenerate reference data for the C++ tests
 python3 make_figures.py      # convergence figure
 ```
 
-**C++** — requires CMake ≥ 3.20 and a C++17 compiler:
+**C++** requires CMake ≥ 3.20 and a C++17 compiler:
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
@@ -327,22 +287,6 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ./build/cpp/fcm1d 200        # benchmark plus min-of-200 phase timing
 ```
-
----
-
-## Roadmap
-
-Next: extension to 3D — octree partitioning, per-point Jacobians, tensor-product shape functions,
-and STL-based inside/outside testing by ray casting. The parameter studies above set the budget:
-p = 15 and depth = 10 are affordable in 1D but not in 3D, where modes grow as (p+1)³ and leaves as
-~4<sup>d</sup>.
-
-Performance work follows the 3D port, since the 1D benchmark is too small for meaningful
-optimisation and most of the 3D cost has no 1D counterpart. The measurement infrastructure is
-already in place. Runs on NVIDIA GH200 (Grace–Hopper) hardware are planned once the 3D solver is
-validated.
-
----
 
 ## References
 

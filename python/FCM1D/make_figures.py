@@ -1,4 +1,3 @@
-"""Yakinsama figurleri: p ve quadrature derinligi."""
 import csv
 import os
 

@@ -1,4 +1,4 @@
-# ---- kutuphaneler ----------------------------------------------------------
+# ---- libraries ----------------------------------------------------------
 
 add_library(fcm_core
         src/core/legendre.cpp
@@ -17,12 +17,12 @@ add_library(fcm1d_lib
 )
 target_link_libraries(fcm1d_lib PUBLIC fcm_core)
 
-# ---- surucu ----------------------------------------------------------------
+# ---- executables ----------------------------------------------------------------
 
 add_executable(fcm1d apps/fcm1d.cpp)
 target_link_libraries(fcm1d PRIVATE fcm1d_lib)
 
-# ---- testler ---------------------------------------------------------------
+# ---- tests ---------------------------------------------------------------
 
 function(fcm_add_test name lib)
     add_executable(${name} tests/${name}.cpp)

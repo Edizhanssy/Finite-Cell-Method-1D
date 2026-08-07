@@ -16,7 +16,6 @@ int main(int argc, char** argv) {
     const std::string dir = (argc > 1) ? argv[1] : std::string(FCM_REFERENCE_DIR);
     int checked = 0, failed = 0;
 
-    // 1) Tabloya karsi: reference/gauss.txt  ->  n i point weight
     {
         std::ifstream in(dir + "/gauss.txt");
         if (!in) { std::fprintf(stderr, "cannot open gauss.txt\n"); return 2; }
@@ -41,7 +40,6 @@ int main(int argc, char** argv) {
         }
     }
 
-    // 2) Tablodan bagimsiz: n-noktali kural 2n-1 dereceye kadar tam integre etmeli
     for (int n = 1; n <= 40; ++n) {
         const fcm::GaussRule rule = fcm::gauss_legendre(n);
         for (int k = 0; k <= 2 * n - 1; ++k) {

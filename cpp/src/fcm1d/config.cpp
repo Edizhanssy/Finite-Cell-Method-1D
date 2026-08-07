@@ -18,7 +18,7 @@ namespace fcm {
     double Config::material_factor(int material) const {
         if (material == 0) return 1.0;
         if (material == 1) return alpha;
-        throw std::runtime_error("gecersiz malzeme id");
+        throw std::runtime_error("undefined material id");
     }
 
     double Config::body_load(double x) const {
@@ -30,7 +30,7 @@ namespace fcm {
     std::array<double, 2> Config::fictitious_span() const {
         for (const DomainSpan& d : domains)
             if (d.material == 1) return {d.x0, d.x1};
-        throw std::runtime_error("fiktif domain tanimli degil");
+        throw std::runtime_error("fictitious domain is not defined");
     }
 
-}  // namespace fcm
+}

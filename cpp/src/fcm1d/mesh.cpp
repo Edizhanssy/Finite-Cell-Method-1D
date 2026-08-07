@@ -20,15 +20,15 @@ namespace fcm {
                  m.node_local[static_cast<std::size_t>(i) + 1]},
                 {i * dx, (i + 1) * dx}});
 
-        // DOF numaralandirma: once tum dugumler, sonra mod mertebesine gore kenarlar
+        // DOF numbering
         int counter = 0;
         m.node_dof.assign(static_cast<std::size_t>(ne) + 1, 0);
         for (int i = 0; i <= ne; ++i)
             m.node_dof[static_cast<std::size_t>(i)] = ++counter;
 
         m.edge_dof.assign(static_cast<std::size_t>(ne), std::vector<int>(n_internal, 0));
-        for (int j = 0; j < n_internal; ++j)        // mod mertebesi DISARIDA
-            for (int e = 0; e < ne; ++e)            // kenarlar ICERDE
+        for (int j = 0; j < n_internal; ++j)
+            for (int e = 0; e < ne; ++e)
                 m.edge_dof[static_cast<std::size_t>(e)][static_cast<std::size_t>(j)] = ++counter;
         m.n_dof = counter;
 
@@ -44,4 +44,4 @@ namespace fcm {
         return m;
     }
 
-}  // namespace fcm
+}

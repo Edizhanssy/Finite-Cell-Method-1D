@@ -30,7 +30,7 @@ namespace fcm {
             }
         }
 
-    }  // namespace
+    }
 
     std::vector<std::array<double, 2>> partition_element(const Element1D& el, const Config& cfg) {
         std::vector<std::array<double, 2>> out;
@@ -38,4 +38,4 @@ namespace fcm {
         return out;
     }
 
-}  // namespace fcm
+}

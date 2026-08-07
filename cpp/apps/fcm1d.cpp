@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     const double mean_disp  = (u2 - u1) / (fs[1] - fs[0]);
 
     std::printf("the total Degree of Freedom of the whole domain:  %d\n", r.mesh.n_dof);
-    std::printf("nodal DOF force sum = %.3e   expected ~0\n", r.nodal_force_sum);
+    std::printf("nodal DOF force sum = %.3e   expected about 0\n", r.nodal_force_sum);
     std::printf("u(0)   = %12.6e   expected  0\n", u0);
     std::printf("u(1)   = %12.6e   expected -3.9789e-03\n", u1);
     std::printf("u(7/3) = %12.6e   expected -1\n", u2);

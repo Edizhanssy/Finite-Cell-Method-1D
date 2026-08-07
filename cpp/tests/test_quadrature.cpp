@@ -17,7 +17,7 @@ bool close_rel(double a, double b) {
     return std::fabs(a - b) <= kRelTol * scale;
 }
 
-}  // namespace
+}
 
 int main(int argc, char** argv) {
     const std::string dir = (argc > 1) ? argv[1] : std::string(FCM_REFERENCE_DIR);
@@ -51,25 +51,24 @@ int main(int argc, char** argv) {
                         e, i, q.xi[k], xi_r, q.w[k], w_r, q.x[k], x_r, q.mat[k], mat_r);
     }
 
-    // Tablodan bagimsiz: agirliklarin toplami eleman uzunlugunu vermeli
     for (std::size_t e = 0; e < quads.size(); ++e) {
         const double sum = std::accumulate(quads[e].w.begin(), quads[e].w.end(), 0.0);
         const double len = std::fabs(m.elements[e].global_[1] - m.elements[e].global_[0]);
         ++checked;
         if (std::fabs(sum - len) > 1e-13 * len && ++failed <= 5)
-            std::printf("FAIL element %zu: sum(w) = %.17g, uzunluk = %.17g\n", e, sum, len);
+            std::printf("FAIL element %zu: sum(w) = %.17g, length = %.17g\n", e, sum, len);
 
         ++checked;
         const std::size_t expect = static_cast<std::size_t>(quads[e].n_subdomains) *
                                    static_cast<std::size_t>(cfg.n_gauss());
         if (quads[e].xi.size() != expect && ++failed <= 5)
-            std::printf("FAIL element %zu: %zu nokta, beklenen %zu\n",
+            std::printf("FAIL element %zu: %zu point, expected %zu\n",
                         e, quads[e].xi.size(), expect);
     }
 
     if (mat_mismatch)
-        std::printf("NOT: %d malzeme uyusmazligi - bir quadrature noktasi domain "
-                    "sinirina cok yakin dusmus olabilir\n", mat_mismatch);
+        std::printf("NOT: %d mismatching materials - one quadrature point domain could"
+                    "fall into near boundary\n", mat_mismatch);
     if (checked < 300) { std::printf("FAILED  quadrature: only %d checks\n", checked); return 2; }
     std::printf("%s  quadrature: %d checks, %d failures\n",
                 failed ? "FAILED" : "PASSED", checked, failed);

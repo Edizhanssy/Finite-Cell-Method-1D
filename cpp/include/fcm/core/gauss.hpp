@@ -15,8 +15,6 @@ namespace fcm {
         std::vector<double> weights;
     };
 
-    /// n-noktali Gauss-Legendre kurali, Legendre koklerinden Newton ile.
-    /// Noktalar artan sirada. Tablo yok, n sinirsiz.
     GaussRule gauss_legendre(int n);
 
 }

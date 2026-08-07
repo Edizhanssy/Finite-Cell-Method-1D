@@ -36,4 +36,4 @@ namespace fcm {
         return q;
     }
 
-}  // namespace fcm
+}

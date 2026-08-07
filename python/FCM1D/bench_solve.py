@@ -1,4 +1,4 @@
-"""Python ve (varsa) C++ cozucusunu min-of-N ile olcer."""
+import csv
 import csv
 import os
 import re
@@ -13,7 +13,7 @@ from paths import RESULTDIR
 REPS = 50
 cfg = Config()
 
-r = solve(cfg)                       # isinma + DOF
+r = solve(cfg)
 dof = r['DOF']
 
 times = []
@@ -35,14 +35,14 @@ if len(sys.argv) > 1:
     m = re.search(r'timing \(min of (\d+), s\):\s+mesh (\S+)\s+quad (\S+)\s+'
                   r'asm (\S+)\s+solve (\S+)\s+total (\S+)', out)
     if not m:
-        print('C++ zamanlama satiri bulunamadi:\n' + out)
+        print('C++ timing row cannot be found:\n' + out)
     else:
         n, mesh, quad, asm, slv, tot = m.groups()
         cpp_best = float(tot)
         print(f'c++     best {cpp_best*1e3:8.3f} ms   '
               f'(n={n})  mesh {float(mesh)*1e3:.3f}  quad {float(quad)*1e3:.3f}  '
               f'asm {float(asm)*1e3:.3f}  solve {float(slv)*1e3:.3f}')
-        print(f'\nhizlanma: {py_best / cpp_best:.1f}x')
+        print(f'\nspeed-up: {py_best / cpp_best:.1f}x')
         rows.append(dict(impl='cpp', dof=dof, reps=int(n),
                          best_ms=cpp_best * 1e3, median_ms='',
                          mesh_ms=float(mesh) * 1e3, quad_ms=float(quad) * 1e3,

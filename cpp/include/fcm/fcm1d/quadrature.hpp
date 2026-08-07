@@ -6,12 +6,11 @@
 
 namespace fcm {
 
-/// Geometriye bagli, integrand'dan bagimsiz. Eleman basina bir kez uretilir.
 struct ElementQuadrature {
-    std::vector<double> xi;    // eleman-yerel koordinat [-1,1]
-    std::vector<double> w;     // agirlik (alt-domain + eleman Jacobian'lari dahil)
-    std::vector<double> x;     // global koordinat
-    std::vector<double> mat;   // malzeme carpani: 1.0 veya alpha
+    std::vector<double> xi;    // element local coordinates [-1,1]
+    std::vector<double> w;     // weight
+    std::vector<double> x;     // global coordinates
+    std::vector<double> mat;   // penalization parameter
     int n_subdomains = 0;
 };
 

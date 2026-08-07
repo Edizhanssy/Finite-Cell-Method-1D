@@ -20,7 +20,7 @@ bool close_rel(double a, double b) {
     return dev <= kRelTol;
 }
 
-}  // namespace
+}
 
 int main(int argc, char** argv) {
     const std::string dir = (argc > 1) ? argv[1] : std::string(FCM_REFERENCE_DIR);
@@ -78,28 +78,28 @@ int main(int argc, char** argv) {
         for (double v : Ke[e]) scale = std::max(scale, std::fabs(v));
 
         for (int i = 0; i < nm; ++i) {
-            for (int j = i + 1; j < nm; ++j) {                       // simetri
+            for (int j = i + 1; j < nm; ++j) {
                 ++checked;
                 const double a = Ke[e][static_cast<std::size_t>(i) * nm + j];
                 const double b = Ke[e][static_cast<std::size_t>(j) * nm + i];
                 if (std::fabs(a - b) > 1e-12 * scale && ++failed <= 5)
-                    std::printf("FAIL simetri e=%zu (%d,%d): %.17g vs %.17g\n", e, i, j, a, b);
+                    std::printf("FAIL symmetry e=%zu (%d,%d): %.17g vs %.17g\n", e, i, j, a, b);
             }
-            ++checked;                                                // rijit cisim
+            ++checked;
             const double rb = Ke[e][static_cast<std::size_t>(i) * nm + 0] +
                               Ke[e][static_cast<std::size_t>(i) * nm + 1];
             if (std::fabs(rb) > 1e-12 * scale && ++failed <= 5)
-                std::printf("FAIL rijit cisim e=%zu satir %d: %.17g\n", e, i, rb);
+                std::printf("FAIL rigid body e=%zu row %d: %.17g\n", e, i, rb);
         }
     }
 
-    ++checked;                                                        // nodal kuvvet toplami
+    ++checked;
     const double fsum = F[0] + F[1] + F[2];
     if (std::fabs(fsum) > 1e-8 && ++failed <= 5)
-        std::printf("FAIL nodal kuvvet toplami %.17g\n", fsum);
+        std::printf("FAIL total nodal force %.17g\n", fsum);
 
-    std::printf("max bagil sapma (Python'a karsi): %.3e\n", g_max_dev);
-    std::printf("nodal kuvvet toplami: %.6e\n", fsum);
+    std::printf("max relative difference: %.3e\n", g_max_dev);
+    std::printf("sum of nodel forces: %.6e\n", fsum);
     if (checked < 500) { std::printf("FAILED  assembly: only %d checks\n", checked); return 2; }
     std::printf("%s  assembly: %d checks, %d failures\n",
                 failed ? "FAILED" : "PASSED", checked, failed);

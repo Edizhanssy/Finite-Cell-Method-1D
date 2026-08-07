@@ -72,4 +72,4 @@ std::vector<double> assemble_force(const Mesh& m, const Config& cfg,
     return F;
 }
 
-}  // namespace fcm
+}

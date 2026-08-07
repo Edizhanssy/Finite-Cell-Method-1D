@@ -23,7 +23,8 @@ namespace fcm {
 
         const int half = (n + 1) / 2;
         for (int i = 0; i < half; ++i) {
-            // Asimptotik baslangic tahmini (Abramowitz-Stegun)
+
+            // Asymptotic beginning estimate!
             double x = std::cos(kPi * (static_cast<double>(i) + 0.75)
                                 / (static_cast<double>(n) + 0.5));
 
@@ -45,4 +46,4 @@ namespace fcm {
         return r;
     }
 
-}  // namespace fcm
+}

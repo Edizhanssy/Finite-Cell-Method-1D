@@ -35,21 +35,20 @@ int main(int argc, char** argv) {
                         e, i, s[0], s[1], a_ref, b_ref);
     }
 
-    // Tabloya bagimsiz yapisal kontroller
     for (std::size_t e = 0; e < subs.size(); ++e) {
         ++checked;
         if (static_cast<int>(subs[e].size()) != cfg.max_depth + 1 && ++failed <= 5)
-            std::printf("FAIL element %zu: %zu alt-domain, beklenen %d\n",
+            std::printf("FAIL element %zu: %zu sub-domain, expected %d\n",
                         e, subs[e].size(), cfg.max_depth + 1);
         ++checked;
         if (std::fabs(subs[e].front()[0] + 1.0) > 1e-15 ||
             std::fabs(subs[e].back()[1] - 1.0) > 1e-15) {
-            if (++failed <= 5) std::printf("FAIL element %zu: uclar [-1,1] degil\n", e);
+            if (++failed <= 5) std::printf("FAIL element %zu: boundaries are not [-1,1]\n", e);
         }
         for (std::size_t i = 1; i < subs[e].size(); ++i) {
             ++checked;
             if (std::fabs(subs[e][i][0] - subs[e][i - 1][1]) > 1e-15 && ++failed <= 5)
-                std::printf("FAIL element %zu: %zu ile %zu arasinda bosluk\n", e, i - 1, i);
+                std::printf("FAIL element %zu: %zu ile %zu the gap between \n", e, i - 1, i);
         }
     }
 

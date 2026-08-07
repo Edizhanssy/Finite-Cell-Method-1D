@@ -9,7 +9,7 @@ namespace fcm {
     std::vector<double> solve_dense(DenseMatrix A, std::vector<double> b) {
         const int n = A.n;
         if (static_cast<int>(b.size()) != n)
-            throw std::invalid_argument("solve_dense: boyut uyusmazligi");
+            throw std::invalid_argument("solve_dense: sizes unmatched");
 
         for (int k = 0; k < n; ++k) {
             int    piv  = k;
@@ -18,7 +18,7 @@ namespace fcm {
                 const double v = std::fabs(A(i, k));
                 if (v > best) { best = v; piv = i; }
             }
-            if (best == 0.0) throw std::runtime_error("solve_dense: tekil matris");
+            if (best == 0.0) throw std::runtime_error("solve_dense: singularity!!");
             if (piv != k) {
                 for (int j = 0; j < n; ++j) std::swap(A(k, j), A(piv, j));
                 std::swap(b[static_cast<std::size_t>(k)], b[static_cast<std::size_t>(piv)]);
@@ -40,4 +40,4 @@ namespace fcm {
         return b;
     }
 
-}  // namespace fcm
+}
